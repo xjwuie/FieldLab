@@ -78,6 +78,8 @@ public class Electromagnetic : Field {
                 if (dragTimer > dragTime)
                 {
                     dragFlag = true;
+                    //HideDirectionSys();
+                    //ResetScaleSys();
                 }
             }
 
@@ -85,11 +87,18 @@ public class Electromagnetic : Field {
             {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 transform.position = new Vector3(mousePos.x, transform.position.y, mousePos.z);
-
                 SetDirectionSys();
                 SetScaleSys();
+
             }
         }
+        /*
+        if (Input.GetMouseButtonUp(0) && isEditing)
+        {
+            ReadDirectionSys();
+            
+        }
+        */
         
 		
 	}
@@ -125,7 +134,7 @@ public class Electromagnetic : Field {
     }
 
     protected override void EditComplete() {
-        ReadDirectionSys();
+        //ReadDirectionSys();
         ReadMenu();
         isEditing = false;
         GameManager._instance.isEditing = false;
@@ -237,15 +246,18 @@ public class Electromagnetic : Field {
    
 
     void SetDirectionSys() {
+        //print("Set Direction System");
         directionCenter.transform.position = new Vector3(transform.position.x, 3, transform.position.z);
-        electricDir = Quaternion.Euler(0, electricLocalAngle, 0) * transform.forward;
         //print(electricLocalAngle);
-        directionCenter.GetComponent<Direction>().Rotate(electricDir);
-        //print(electricLocalAngle);
+        Vector3 dir = Quaternion.Euler(0, electricLocalAngle, 0) * transform.forward;
+        //print(electricDir);
+        directionCenter.GetComponent<Direction>().Rotate(dir);
     }
 
     void ReadDirectionSys() {
+        //print("Read Direction System");
         electricDir = directionCenter.GetComponent<Direction>().RefreshDir();
+        //print(electricDir);
         electricLocalAngle = Vector3.SignedAngle(transform.forward, electricDir, transform.up);
         //print(electricLocalAngle);
     }

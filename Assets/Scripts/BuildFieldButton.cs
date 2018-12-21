@@ -54,6 +54,7 @@ public class BuildFieldButton : MonoBehaviour {
         fieldType = _fieldType;
         Sprite sp = Resources.Load("Images/Alter", typeof(Sprite)) as Sprite;
         buttonImage.sprite = sp;
+        transform.localScale = new Vector3(1, 1, 1);
         Refresh();
     }
 

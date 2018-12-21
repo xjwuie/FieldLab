@@ -119,7 +119,9 @@ public class MyUI : MonoBehaviour {
         foreach(string key in GameManager._instance.fieldMaxDic.Keys)
         {
             GameObject go = Instantiate(Resources.Load("Prefabs/BuildButton/BuildFieldButton", typeof(GameObject))) as GameObject;
-            go.transform.parent = buildListContent.transform;
+            //go.transform.parent = buildListContent.transform;
+            go.transform.SetParent(buildListContent.transform, false);
+            //print(buildListContent.transform.gameObject.name);
             go.GetComponent<BuildFieldButton>().Init(key);
             buildButtons.Add(go);
         }

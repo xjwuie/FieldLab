@@ -56,6 +56,10 @@ public class Field : MonoBehaviour {
 
     }
 
+    protected virtual void FunOnMouseUp() {
+
+    }
+
     protected virtual void ShowMenu() {
 
     }
