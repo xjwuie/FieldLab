@@ -75,10 +75,9 @@ public class MyCamera : MonoBehaviour {
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, cam.transform.position.y + 10f))
                 {
-                    if (hit.collider.gameObject.tag == "Background" || hit.collider.gameObject.tag == "Wall")
+                    if (hit.collider.gameObject.tag == "Background")
                     {
                         isDrag = true;
-                        //Debug.Log("hit");
                     }
                 }
             }

@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BuildFieldButton : MonoBehaviour {
+public class BuildFieldButton : BuildObjectButton {
+    /*
     string fieldType = "Acceleration";
 
     Text remainText;
     Image buttonImage;
     Button button;
-    
+    */
+
     int remainNum;
 
+    /*
     void Awake() {
         remainText = transform.GetChild(0).gameObject.GetComponent<Text>();
         buttonImage = gameObject.GetComponent<Image>();
@@ -23,9 +26,10 @@ public class BuildFieldButton : MonoBehaviour {
             Create();
         });
     }
+    */
 
-    public void Refresh() {
-        remainNum = GameManager._instance.FieldRemainNum(fieldType);
+    public override void Refresh() {
+        remainNum = GameManager._instance.FieldRemainNum(objectType);
         
         if (remainNum < 0)
         {
@@ -42,14 +46,15 @@ public class BuildFieldButton : MonoBehaviour {
             buttonImage.color = Color.white;
     }
     
-    void Create() {
-        if (GameManager._instance.CreateField(fieldType))
+    protected override void Create() {
+        if (GameManager._instance.CreateField(objectType))
         {
             print("create success");
         }
         Refresh();
     }
 
+    /*
     public void Init(string _fieldType) {
         fieldType = _fieldType;
         Sprite sp = Resources.Load("Images/Alter", typeof(Sprite)) as Sprite;
@@ -57,5 +62,6 @@ public class BuildFieldButton : MonoBehaviour {
         transform.localScale = new Vector3(1, 1, 1);
         Refresh();
     }
+    */
 
 }

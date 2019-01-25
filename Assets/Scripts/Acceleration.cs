@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +11,7 @@ public class Acceleration : Field {
     Rigidbody rigid;
     GameObject acceMenu;
     bool isEffective = false;
-    public float maxScale = 10;
+    //public float maxScale = 10;
 
     bool isPositive = true;
     float acceleration = 1f;
@@ -25,16 +28,20 @@ public class Acceleration : Field {
 
     Button editOk;
 
-
+    public override void TestFunc() {
+        print("test function in Acceleration");
+    }
 
     void Awake() {
         scaleSys = GameObject.Find("ScaleSys");
-        acceMenu = GameObject.Find("AccelerationMenu");
+        //acceMenu = GameObject.Find("AccelerationMenu");
         myUI = GameObject.Find("Canvas");
+        editMenu = GameObject.Find("EditMenus");
     }
 
     void Start() {
         fieldType = "Acceleration";
+        acceMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
         SetMenu(false);
         ResetScaleSys();
     }
@@ -58,6 +65,7 @@ public class Acceleration : Field {
                 SetScaleSys();
             }
         }
+       
     }
 
     void FixedUpdate() {
@@ -91,7 +99,9 @@ public class Acceleration : Field {
 
         scaleSys.GetComponent<ScaleSys>().maxSacle = maxScale;
         SetScaleSys();
-        myUI.GetComponent<MyUI>().SetDeleteButton(true);
+        MyUI ui = myUI.GetComponent<MyUI>();
+        ui.SetDeleteButton(true);
+        ui.ShowMenuByName(fieldType + "Menu");
         SetMenu(true);
         FindComponents();
         SetListeners();
@@ -162,13 +172,25 @@ public class Acceleration : Field {
         positiveToggle.onValueChanged.RemoveAllListeners();
         rotationBar.onValueChanged.RemoveAllListeners();
         editOk.onClick.RemoveAllListeners();
+        
     }
 
-    
 
+    //void SetMenu(bool isOn) {acceMenu.GetComponent<Animator>().SetBool("menuOn", isOn);}
 
+    public override FieldInfo Save() {
+        base.Save();
+        
+        fieldInfo.acceAcce = acceleration;
+        fieldInfo.acceIsAccePositive = isPositive;
 
-    void SetMenu(bool isOn) {
-        acceMenu.GetComponent<Animator>().SetBool("menuOn", isOn);
+        return fieldInfo;
+    }
+
+    public override void Restore(FieldInfo info) {
+        base.Restore(info);
+
+        acceleration = fieldInfo.acceAcce;
+        isPositive = fieldInfo.acceIsAccePositive;
     }
 }

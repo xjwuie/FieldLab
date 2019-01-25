@@ -97,7 +97,7 @@ Material:
     - _DivX: 1
     - _DivY: 1
     - _DstBlend: 0
-    - _Gloss: 42
+    - _Gloss: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1

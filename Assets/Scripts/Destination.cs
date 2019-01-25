@@ -8,6 +8,29 @@ public class Destination : MonoBehaviour {
     Rigidbody rigid;
     public float breakValue = 10;
 
+    bool dragFlag = false;
+    float dragTimer = 0f;
+    float dragTime = 0.5f;
+    bool dragTimeFlag = false;
+
+    
+    void Update() {
+        if (dragTimeFlag)
+        {
+            dragTimer += Time.deltaTime;
+            if (dragTimer >= dragTime)
+            {
+                dragFlag = true;
+            }
+        }
+        
+        if (dragFlag)
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = new Vector3(mousePos.x, transform.position.y, mousePos.z);
+        }
+    }
+
     void FixedUpdate() {
         if (ifWin)
         {
@@ -37,5 +60,18 @@ public class Destination : MonoBehaviour {
 
     void TimeStop() {
         Time.timeScale = 0;
+    }
+
+    void OnMouseDown() {
+        if (GameManager.editMode && GameManager._instance.CheckGraphicRayCast() == 0)
+        {
+            dragTimeFlag = true;
+        }
+    }
+
+    void OnMouseUp() {
+        dragFlag = false;
+        dragTimer = 0;
+        dragTimeFlag = false;
     }
 }

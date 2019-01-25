@@ -3,25 +3,65 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[Serializable]
+public class FieldInfo
+{
+    //global
+    public string fieldType = "";
+
+    public float posX = 0, posY = 0, posZ = 0;
+    public float scaleX = 1, scaleY = 1, scaleZ = 1;
+    public float rotationX = 0, rotationY = 0, rotationZ = 0;
+
+    public float maxScale = 10;
+
+    //Acceleration
+    public bool acceIsAccePositive = true;
+    public float acceMaxAcce = 10, acceMinAcce = 0;
+    public float acceAcce = 1;
+
+    //Gravitation
+    public float gravMG = 1, gravAtten = 2;
+    public float gravMaxGravMG = 10, gravMinGravMG = 0;
+    public float gravMaxAtten = 5, gravMinAtten = 1;
+
+    //Teleport
+
+
+    //Electromagnetic
+    public float elecMagn = 1, elecElec = 1;
+    public float elecElecDirX = 0, elecElecDirY = 0, elecElecDirZ = 0;
+    public bool elecMagnUp = true;
+    public float elecMaxElec = 10, elecMinElec = 0;
+    public float elecMaxMagn = 3, elecMinMagn = 0;
+
+}
+
 public class Field : MonoBehaviour {
 
     protected GameObject scaleSys;
     protected GameObject myUI;
+    protected GameObject editMenu;
 
     protected bool editable = true;
     protected bool isEditing = false;
     protected float dragTimer = 0f;
+    [SerializeField]
     protected float dragTime = 0.5f;
     protected bool dragTimeFlag = false;
     protected bool dragFlag = false;
 
+    protected FieldInfo fieldInfo = new FieldInfo();
 
     public string fieldType;
+    public float maxScale;
 
+    public virtual void TestFunc() {
 
+        print("test function in Field(base)");
+    }
 
     void OnMouseDown() {
-        print(GameManager._instance.CheckGraphicRayCast());
         if(editable && GameManager._instance.CheckGraphicRayCast() == 0)
             dragTimeFlag = true;
     }
@@ -85,7 +125,34 @@ public class Field : MonoBehaviour {
         if(!GameManager.gameOver)
             EditComplete();
         print("Destroy" + gameObject.name);
+        Save();
     }
 
+    public virtual FieldInfo Save() {
+        fieldInfo.fieldType = fieldType;
+        fieldInfo.posX = transform.position.x;
+        fieldInfo.posY = transform.position.y;
+        fieldInfo.posZ = transform.position.z;
+        fieldInfo.scaleX = transform.localScale.x;
+        fieldInfo.scaleY = transform.localScale.y;
+        fieldInfo.scaleZ = transform.localScale.z;
+        fieldInfo.rotationX = transform.localEulerAngles.x;
+        fieldInfo.rotationY = transform.localEulerAngles.y;
+        fieldInfo.rotationZ = transform.localEulerAngles.z;
+        fieldInfo.maxScale = maxScale;
+        return new FieldInfo();
+    }
 
+    public virtual void Restore(FieldInfo info) {
+        fieldInfo = info;
+
+        transform.position = new Vector3(fieldInfo.posX, fieldInfo.posY, fieldInfo.posZ);
+        transform.localScale = new Vector3(fieldInfo.scaleX, fieldInfo.scaleY, fieldInfo.scaleZ);
+        transform.localEulerAngles = new Vector3(fieldInfo.rotationX, fieldInfo.rotationY, fieldInfo.rotationZ);
+        maxScale = fieldInfo.maxScale;
+    }
+
+    protected void SetMenu(bool isOn) {
+        editMenu.GetComponent<Animator>().SetBool("menuOn", isOn);
+    }
 }

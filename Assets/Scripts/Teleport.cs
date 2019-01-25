@@ -10,7 +10,7 @@ public class Teleport : Field {
     GameObject teleMenu;
     //GameObject scaleSys;
 
-    public float maxScale = 15;
+    //public float maxScale = 15;
 
     Text rotationText;
     Scrollbar rotationBar;
@@ -20,14 +20,16 @@ public class Teleport : Field {
 
 
     void Awake() {
-        teleMenu = GameObject.Find("TeleportMenu");
+        //teleMenu = GameObject.Find("TeleportMenu");
         scaleSys = GameObject.Find("ScaleSys");
         myUI = GameObject.Find("Canvas");
+        editMenu = GameObject.Find("EditMenus");
     }
 
     void Start() {
         //teleMenu.SetActive(false);
         fieldType = "Teleport";
+        teleMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
         SetMenu(false);
         scaleSys.transform.position = Vector3.down * 10 + scaleSys.transform.position;
     }
@@ -83,7 +85,10 @@ public class Teleport : Field {
         //GameManager._instance.activeObject = gameObject;
         scaleSys.GetComponent<ScaleSys>().maxSacle = maxScale;
         SetScaleSys();
-        myUI.GetComponent<MyUI>().SetDeleteButton(true);
+
+        MyUI ui = myUI.GetComponent<MyUI>();
+        ui.SetDeleteButton(true);
+        ui.ShowMenuByName(fieldType + "Menu");
         float rotationVal = transform.localEulerAngles.y / 360;
 
         //teleMenu.SetActive(true);
@@ -136,9 +141,14 @@ public class Teleport : Field {
     }
 
 
-    void SetMenu(bool isOn) {
-        teleMenu.GetComponent<Animator>().SetBool("menuOn", isOn);
+    //void SetMenu(bool isOn) {gravMenu.GetComponent<Animator>().SetBool("menuOn", isOn);}
+
+    public override FieldInfo Save() {
+        return base.Save();
     }
 
+    public override void Restore(FieldInfo info) {
+        base.Restore(info);
+    }
 
 }

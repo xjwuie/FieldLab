@@ -9,47 +9,47 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1362221160919528}
+  m_RootGameObject: {fileID: 1126297064404952}
   m_IsPrefabParent: 1
---- !u!1 &1362221160919528
+--- !u!1 &1126297064404952
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4098577016608870}
-  - component: {fileID: 33156373446732070}
-  - component: {fileID: 65560097063091390}
-  - component: {fileID: 23293387925220262}
-  - component: {fileID: 54334663883253056}
-  - component: {fileID: 114348692937943754}
+  - component: {fileID: 4418946624708854}
+  - component: {fileID: 33857216822859278}
+  - component: {fileID: 65527334172382692}
+  - component: {fileID: 23587607783238388}
+  - component: {fileID: 54460710305383024}
+  - component: {fileID: 114041459299025530}
   m_Layer: 0
-  m_Name: Electromagnetic
-  m_TagString: Untagged
+  m_Name: Wall
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4098577016608870
+--- !u!4 &4418946624708854
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1362221160919528}
+  m_GameObject: {fileID: 1126297064404952}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.71, y: 1, z: -2.18}
-  m_LocalScale: {x: 5, y: 2, z: 5}
+  m_LocalPosition: {x: -1.0199995, y: 1, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 5}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23293387925220262
+--- !u!23 &23587607783238388
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1362221160919528}
+  m_GameObject: {fileID: 1126297064404952}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -58,7 +58,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 3cdfe959107059f49a00d9c091c6ff58, type: 2}
+  - {fileID: 2100000, guid: 8f84d2862200c5a4383fa67b5e8682c6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,19 +78,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33156373446732070
+--- !u!33 &33857216822859278
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1362221160919528}
+  m_GameObject: {fileID: 1126297064404952}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!54 &54334663883253056
+--- !u!54 &54460710305383024
 Rigidbody:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1362221160919528}
+  m_GameObject: {fileID: 1126297064404952}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -100,33 +100,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &65560097063091390
+--- !u!65 &65527334172382692
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1362221160919528}
+  m_GameObject: {fileID: 1126297064404952}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114348692937943754
+--- !u!114 &114041459299025530
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1362221160919528}
+  m_GameObject: {fileID: 1126297064404952}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23a0f0ad3ac6ba342b1388599e1510e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 632689608eea35d4aa61cd8ad042383e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dragTime: 0.5
-  fieldType: 
-  maxScale: 10
-  minElec: 0
-  maxElec: 100
-  minMagn: 0.1
-  maxMagn: 3

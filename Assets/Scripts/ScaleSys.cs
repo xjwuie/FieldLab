@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ScaleSys : MonoBehaviour {
-
-
-    string activeObject;
     GameObject obj;
     Transform objTransform;
     Vector3 scale;
@@ -14,6 +11,8 @@ public class ScaleSys : MonoBehaviour {
     bool isAvailable = false;
     bool isCircle = false;
     public float maxSacle = 5;
+
+    public Transform rotationSys;
 
 	// Use this for initialization
 	void Start () {
@@ -30,6 +29,8 @@ public class ScaleSys : MonoBehaviour {
                 
                 Vector3 x = objTransform.right * Mathf.Clamp(Vector3.Dot(pos - centerPos, objTransform.right), 0.5f, maxSacle / 2);
                 Vector3 z = objTransform.forward * Mathf.Clamp(Vector3.Dot(pos - centerPos, objTransform.forward), 0.5f, maxSacle / 2);
+                print(pos);
+
                 if (isCircle)
                 {
                     float lenX = Vector3.Magnitude(x);
@@ -41,11 +42,20 @@ public class ScaleSys : MonoBehaviour {
                 pos = centerPos + x + z;
                 pos.y = 3;
                 transform.position = pos;
+
+
                 Vector3 dif = pos - centerPos;
                 Vector3 originDif = originPos - centerPos;
                 float scaleX = Vector3.Dot(dif, objTransform.right) / Vector3.Dot(originDif, objTransform.right) * scale.x;
                 float scaleZ = Vector3.Dot(dif, objTransform.forward) / Vector3.Dot(originDif, objTransform.forward) * scale.z;
+
                 objTransform.localScale = new Vector3(scaleX, objTransform.localScale.y, scaleZ);
+
+                if (rotationSys.position.y > 0f)
+                {
+                    pos = centerPos - 0.5f * objTransform.right * scaleX + 2f * objTransform.up;
+                    rotationSys.position = pos;
+                }
                 
             }
         }

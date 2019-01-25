@@ -10,7 +10,7 @@ public class Gravitation : Field {
 
     bool isEffective = false;
     //const float G = 6.67e-11f;
-    public float maxScale = 10;
+    //public float maxScale = 10;
 
     float fieldMassXG = 1;
     float attenuation = 2;
@@ -29,12 +29,14 @@ public class Gravitation : Field {
 
     void Awake() {
         scaleSys = GameObject.Find("ScaleSys");
-        gravMenu = GameObject.Find("GravitationMenu");
+        //gravMenu = GameObject.Find("GravitationMenu");
         myUI = GameObject.Find("Canvas");
+        editMenu = GameObject.Find("EditMenus");
     }
 
     void Start() {
         fieldType = "Gravitation";
+        gravMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
         SetMenu(false);
         ResetScaleSys();
     }
@@ -96,7 +98,9 @@ public class Gravitation : Field {
 
         scaleSys.GetComponent<ScaleSys>().maxSacle = maxScale;
         SetScaleSys();
-        myUI.GetComponent<MyUI>().SetDeleteButton(true);
+        MyUI ui = myUI.GetComponent<MyUI>();
+        ui.SetDeleteButton(true);
+        ui.ShowMenuByName(fieldType + "Menu");
         SetMenu(true);
         FindComponents();
         SetListeners();
@@ -162,8 +166,22 @@ public class Gravitation : Field {
     }
 
 
-    void SetMenu(bool isOn) {
-        gravMenu.GetComponent<Animator>().SetBool("menuOn", isOn);
+    //void SetMenu(bool isOn) {gravMenu.GetComponent<Animator>().SetBool("menuOn", isOn);}
+
+    public override FieldInfo Save() {
+        base.Save();
+
+        fieldInfo.gravAtten = attenuation;
+        fieldInfo.gravMG = fieldMassXG;
+        
+
+        return fieldInfo;
     }
 
+    public override void Restore(FieldInfo info) {
+        base.Restore(info);
+
+        attenuation = fieldInfo.gravAtten;
+        attenuation = fieldInfo.gravMG;
+    }
 }

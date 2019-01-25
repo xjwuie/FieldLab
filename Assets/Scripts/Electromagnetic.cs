@@ -7,10 +7,11 @@ public class Electromagnetic : Field {
 
     GameObject directionCenter;
     Rigidbody rigid;
-    GameObject elecMenu;
+    //GameObject elecMenu;
+    Transform elecMenu;
     //GameObject scaleSys;
 
-    public float maxScale = 5f;
+    //public float maxScale = 5f;
 
     bool magUp = true;
     float magnetic = 1f;
@@ -48,24 +49,26 @@ public class Electromagnetic : Field {
 
     void Awake() {
         directionCenter = GameObject.Find("DirectionSys");
-        elecMenu = GameObject.Find("ElectromagneticMenu");
+
         scaleSys = GameObject.Find("ScaleSys");
         myUI = GameObject.Find("Canvas");
+        editMenu = GameObject.Find("EditMenus");
     }
 
 	// Use this for initialization
 	void Start () {
         fieldType = "Electromagnetic";
+        elecMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType);
         //elecMenu.SetActive(false);
         SetMenu(false);
         electricDir = transform.forward;
-        SetDirectionSys();
-        HideDirectionSys();
+        //SetDirectionSys();
+        //HideDirectionSys();
         ResetScaleSys();
         electric = Mathf.Clamp(electric, minElec, maxElec);
         magnetic = Mathf.Clamp(magnetic, minMagn, maxMagn);
-        Debug.Log("Electromagnetic start()");
-        scaleSys.transform.position = Vector3.down * -10 + scaleSys.transform.position;
+        //Debug.Log("Electromagnetic start()");
+        //scaleSys.transform.position = Vector3.down * -10 + scaleSys.transform.position;
 	}
 	
 	// Update is called once per frame
@@ -155,7 +158,9 @@ public class Electromagnetic : Field {
         scaleSys.GetComponent<ScaleSys>().maxSacle = maxScale;
         SetScaleSys();
         SetDirectionSys();
-        myUI.GetComponent<MyUI>().SetDeleteButton(true);
+        MyUI ui = myUI.GetComponent<MyUI>();
+        ui.SetDeleteButton(true);
+        ui.ShowMenuByName(fieldType + "Menu");
 
         float elecRange = maxElec - minElec;
         float elecVal = (electric - minElec) / elecRange;
@@ -238,12 +243,9 @@ public class Electromagnetic : Field {
         editOK.onClick.RemoveAllListeners();
     }
 
-    void SetMenu(bool isOn) {
-        //print(elecMenu.name);
-        elecMenu.GetComponent<Animator>().SetBool("menuOn", isOn);
-    }
-    
-   
+    //void SetMenu(bool isOn) {gravMenu.GetComponent<Animator>().SetBool("menuOn", isOn);}
+
+
 
     void SetDirectionSys() {
         //print("Set Direction System");
@@ -264,5 +266,29 @@ public class Electromagnetic : Field {
 
     void HideDirectionSys() {
         directionCenter.transform.position = new Vector3(transform.position.x, -3, transform.position.z);
+    }
+
+    public override FieldInfo Save() {
+        base.Save();
+
+        fieldInfo.elecElec = electric;
+        fieldInfo.elecMagn = magnetic;
+        fieldInfo.elecElecDirX = electricDir.x;
+        fieldInfo.elecElecDirY = electricDir.y;
+        fieldInfo.elecElecDirZ = electricDir.z;
+        fieldInfo.elecMagnUp = magUp;
+        
+
+        return fieldInfo;
+    }
+
+    public override void Restore(FieldInfo info) {
+        base.Restore(info);
+
+        electricDir = new Vector3(fieldInfo.elecElecDirX, fieldInfo.elecElecDirY, fieldInfo.elecElecDirZ);
+        electric = fieldInfo.elecElec;
+        magUp = fieldInfo.elecMagnUp;
+        magnetic = fieldInfo.elecMagn;
+
     }
 }
