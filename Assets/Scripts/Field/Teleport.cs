@@ -7,10 +7,12 @@ public class Teleport : Field {
 
     Rigidbody rigid;
     Transform ballTrans;
-    GameObject teleMenu;
+    //GameObject teleMenu;
     //GameObject scaleSys;
 
     //public float maxScale = 15;
+
+    Vector3 tmpVelocity;
 
     Text rotationText;
     Scrollbar rotationBar;
@@ -29,7 +31,7 @@ public class Teleport : Field {
     void Start() {
         //teleMenu.SetActive(false);
         fieldType = "Teleport";
-        teleMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
+        //teleMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
         SetMenu(false);
         scaleSys.transform.position = Vector3.down * 10 + scaleSys.transform.position;
     }
@@ -59,6 +61,8 @@ public class Teleport : Field {
 	void OnTriggerEnter(Collider collider) {
         if(collider.gameObject.tag == "Core")
         {
+            if (!collider.transform.parent.GetComponent<Ball>()._isShot)
+                return;
             rigid = collider.gameObject.transform.parent.GetComponent<Rigidbody>();
             ballTrans = rigid.transform;
             Vector3 vec = rigid.position - transform.position;
@@ -69,12 +73,35 @@ public class Teleport : Field {
 
             if (Mathf.Abs(dotX) > Mathf.Abs(dotZ))
             {
-                ballTrans.position += -dotX * transform.right * transform.localScale.x;
+                //Vector3 newPos = ballTrans.position + -dotX * transform.right * transform.localScale.x;
+                tmpVelocity = rigid.velocity;
+                //ballTrans.position += -dotX * transform.right * transform.localScale.x;
+                Ball script = ballTrans.GetComponent<Ball>();
+                script.HideWithPartical(-dotX * transform.right * tmpVelocity.magnitude * transform.localScale.x);              
             }
             else
             {
-                ballTrans.position += -dotZ * transform.forward * transform.localScale.z;
+                //Vector3 newPos = ballTrans.position + -dotZ * transform.forward * transform.localScale.z;
+                tmpVelocity = rigid.velocity;
+                //ballTrans.position += -dotZ * transform.forward * transform.localScale.z;
+
+                Ball script = ballTrans.GetComponent<Ball>();
+                script.HideWithPartical(-dotZ * transform.forward * tmpVelocity.magnitude * transform.localScale.z);
             }
+        }
+        
+    }
+
+    void OnTriggerExit(Collider collider) {
+        if (collider.gameObject.tag == "Core")
+        {
+            if (!collider.transform.parent.GetComponent<Ball>()._isShot)
+                return;
+            rigid = collider.gameObject.transform.parent.GetComponent<Rigidbody>();
+            ballTrans = rigid.transform;
+
+            rigid.velocity = tmpVelocity;
+            ballTrans.GetComponent<Ball>().ShowWithPartical(tmpVelocity);
         }
     }
 
@@ -147,8 +174,8 @@ public class Teleport : Field {
         return base.Save();
     }
 
-    public override void Restore(FieldInfo info) {
-        base.Restore(info);
+    public override void Restore(FieldInfo info, bool edit) {
+        base.Restore(info, edit);
     }
 
 }

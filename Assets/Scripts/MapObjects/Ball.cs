@@ -11,7 +11,7 @@ public class Ball : MonoBehaviour {
 
     Rigidbody rigid;
     GameObject direction;
-
+    GameObject particalSys;
     
     Vector3 shootDir;
     Vector3 velocityDir = Vector3.zero;
@@ -54,19 +54,23 @@ public class Ball : MonoBehaviour {
     //FieldEffect[] fieldEffect = new FieldEffect[2];
 
     void Awake() {
+        print("ball awake");
         rigid = GetComponent<Rigidbody>();
         direction = GameObject.Find("Direction");
     }
 	// Use this for initialization
 	void Start () {
+        print("ball start");
         shootDir = transform.forward;
         isShot = false;
         direction.SetActive(false);
         editOK.SetActive(false);
-        //cameraAspect = Camera.main.aspect;
-        //cameraSize = Camera.main.orthographicSize;
-        //planeScale = GameObject.Find("Plane").transform.localScale * 5;
         rigid.constraints = RigidbodyConstraints.FreezeAll;
+        particalSys = GameObject.Find("BallParticle");
+    }
+
+    void OnEnable() {
+        print("ball on enable");
     }
 	
     void FixedUpdate() {
@@ -112,12 +116,28 @@ public class Ball : MonoBehaviour {
             rigid.constraints = RigidbodyConstraints.None;
             rigid.velocity = shootDir * velocity;
             isShot = true;
-        }
-        
-        
+        }  
     }
 
+    public void HideWithPartical(Vector3 v) {
+        particalSys.transform.position = transform.position;
+        //transform.position = transform.position + Vector3.down * 5;
+        GetComponent<MeshRenderer>().enabled = false;
+        rigid.velocity = v;
+        
+        particalSys.GetComponent<ParticleSystem>().Play();
+    }
+
+    public void ShowWithPartical(Vector3 v) {
+        particalSys.transform.position = transform.position;
+        GetComponent<MeshRenderer>().enabled = true;
+        rigid.velocity = v;
+        particalSys.GetComponent<ParticleSystem>().Play();
+    }
+
+
     void OnMouseDown() {
+        
         if (isEditing)
         {
             isClicked = true;

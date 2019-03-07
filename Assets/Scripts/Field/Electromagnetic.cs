@@ -8,7 +8,7 @@ public class Electromagnetic : Field {
     GameObject directionCenter;
     Rigidbody rigid;
     //GameObject elecMenu;
-    Transform elecMenu;
+    //Transform elecMenu;
     //GameObject scaleSys;
 
     //public float maxScale = 5f;
@@ -58,7 +58,7 @@ public class Electromagnetic : Field {
 	// Use this for initialization
 	void Start () {
         fieldType = "Electromagnetic";
-        elecMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType);
+        //elecMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType);
         //elecMenu.SetActive(false);
         SetMenu(false);
         electricDir = transform.forward;
@@ -282,8 +282,8 @@ public class Electromagnetic : Field {
         return fieldInfo;
     }
 
-    public override void Restore(FieldInfo info) {
-        base.Restore(info);
+    public override void Restore(FieldInfo info, bool edit) {
+        base.Restore(info, edit);
 
         electricDir = new Vector3(fieldInfo.elecElecDirX, fieldInfo.elecElecDirY, fieldInfo.elecElecDirZ);
         electric = fieldInfo.elecElec;

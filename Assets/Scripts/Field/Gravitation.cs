@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Gravitation : Field {
 
     Rigidbody rigid;
-    GameObject gravMenu;
+    //GameObject gravMenu;
 
     bool isEffective = false;
     //const float G = 6.67e-11f;
@@ -32,13 +32,21 @@ public class Gravitation : Field {
         //gravMenu = GameObject.Find("GravitationMenu");
         myUI = GameObject.Find("Canvas");
         editMenu = GameObject.Find("EditMenus");
+
+        meshRenderer = GetComponent<MeshRenderer>();
+        shader = Shader.Find("Custom/TransparentWave");
+        meshRenderer.material = material;
     }
 
     void Start() {
         fieldType = "Gravitation";
-        gravMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
+        //gravMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
         SetMenu(false);
         ResetScaleSys();
+
+        float freq = fieldMassXG / maxMG * 10f;
+        material.SetFloat("_Frequency", freq);
+        material.SetFloat("_AttenFactor", attenuation);
     }
 
     void Update() {
@@ -123,6 +131,10 @@ public class Gravitation : Field {
         attenText.text = attenuation.ToString();
         fieldMassXG = MGBar.value * MGRange + minMG;
         MGText.text = fieldMassXG.ToString();
+
+        float freq = fieldMassXG / maxMG * 10f;
+        material.SetFloat("_Frequency", freq);
+        material.SetFloat("_AttenFactor", attenuation);
     }
 
     protected override void EditComplete() {
@@ -178,8 +190,8 @@ public class Gravitation : Field {
         return fieldInfo;
     }
 
-    public override void Restore(FieldInfo info) {
-        base.Restore(info);
+    public override void Restore(FieldInfo info, bool edit) {
+        base.Restore(info, edit);
 
         attenuation = fieldInfo.gravAtten;
         attenuation = fieldInfo.gravMG;

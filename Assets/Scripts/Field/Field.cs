@@ -56,6 +56,16 @@ public class Field : MonoBehaviour {
     public string fieldType;
     public float maxScale;
 
+    protected MeshRenderer meshRenderer;
+    protected Shader shader;
+    protected Material _material;
+    protected Material material {
+        get { _material = CheckAndCreateMaterial(shader, _material);
+            return _material;
+        }
+    }
+    
+
     public virtual void TestFunc() {
 
         print("test function in Field(base)");
@@ -143,16 +153,40 @@ public class Field : MonoBehaviour {
         return new FieldInfo();
     }
 
-    public virtual void Restore(FieldInfo info) {
+    public virtual void Restore(FieldInfo info, bool edit) {
         fieldInfo = info;
 
         transform.position = new Vector3(fieldInfo.posX, fieldInfo.posY, fieldInfo.posZ);
         transform.localScale = new Vector3(fieldInfo.scaleX, fieldInfo.scaleY, fieldInfo.scaleZ);
         transform.localEulerAngles = new Vector3(fieldInfo.rotationX, fieldInfo.rotationY, fieldInfo.rotationZ);
         maxScale = fieldInfo.maxScale;
+        editable = edit;
     }
 
     protected void SetMenu(bool isOn) {
         editMenu.GetComponent<Animator>().SetBool("menuOn", isOn);
+    }
+
+
+
+    Material CheckAndCreateMaterial(Shader shader, Material material) {
+        if(material == null)
+        {
+            material = meshRenderer.material;
+        }
+        if (shader == null)
+            return null;
+        if(shader.isSupported && material && material.shader == shader)
+        {
+            return material;
+        }
+        if (!shader.isSupported)
+            return null;
+        material = new Material(shader);
+        material.hideFlags = HideFlags.DontSave;
+        if (material)
+            return material;
+        else
+            return null;
     }
 }

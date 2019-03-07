@@ -30,7 +30,9 @@ public class LevelScroll : MonoBehaviour, IDragHandler, IEndDragHandler {
 
 	// Use this for initialization
 	void Start () {
+        print("scroll start");
         scrollRect = GetComponent<ScrollRect>();
+        print(scrollRect.verticalNormalizedPosition);
         //RectTransform rectTransform = GetComponent<RectTransform>();
         float pageHeight = viewport.rect.height;
         float pageWidth = viewport.rect.width;
@@ -42,7 +44,8 @@ public class LevelScroll : MonoBehaviour, IDragHandler, IEndDragHandler {
         int verticalNum = Mathf.FloorToInt((pageHeight - padTop + spaceY) / (layout.cellSize.y + spaceY));
         int horizontalNum = Mathf.FloorToInt((pageWidth + spaceX) / (layout.cellSize.x + spaceX));
         int cellsPerPage = verticalNum * horizontalNum;
-        int totalPageNum = Mathf.CeilToInt(1f * content.childCount / cellsPerPage);
+        
+        int totalPageNum = Mathf.CeilToInt(Mathf.Max(1f, content.childCount) / cellsPerPage);
         float contentHeight = (layout.cellSize.y + spaceY) * verticalNum;
         float totalHeight = (totalPageNum - 1) * contentHeight + pageHeight;
 

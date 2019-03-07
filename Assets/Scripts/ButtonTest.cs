@@ -14,5 +14,10 @@ using UnityEditor;
 
 public class ButtonTest : MonoBehaviour
 {
-    
+    void Awake() {
+        foreach(Text t in transform.GetComponentsInChildren<Text>())
+        {
+            t.raycastTarget = true;
+        }
+    }
 }

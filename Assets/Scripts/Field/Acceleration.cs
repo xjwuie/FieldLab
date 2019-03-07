@@ -9,24 +9,23 @@ using UnityEngine.UI;
 public class Acceleration : Field {
 
     Rigidbody rigid;
-    GameObject acceMenu;
-    bool isEffective = false;
-    //public float maxScale = 10;
 
+    bool isEffective = false;
     bool isPositive = true;
     float acceleration = 1f;
 
     public float maxAcceleration = 10;
     public float minAcceleration = 0;
+
     Text acceText;
     Scrollbar acceBar;
-
     Toggle positiveToggle;
-
     Text rotationText;
     Scrollbar rotationBar;
-
     Button editOk;
+
+    //MeshRenderer meshRenderer;
+    //Material material;
 
     public override void TestFunc() {
         print("test function in Acceleration");
@@ -37,13 +36,26 @@ public class Acceleration : Field {
         //acceMenu = GameObject.Find("AccelerationMenu");
         myUI = GameObject.Find("Canvas");
         editMenu = GameObject.Find("EditMenus");
+
+        meshRenderer = GetComponent<MeshRenderer>();
+        
+        shader = Shader.Find("Custom/Transparent");
+        meshRenderer.material = material;
     }
 
     void Start() {
         fieldType = "Acceleration";
-        acceMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
+        //acceMenu = myUI.GetComponent<MyUI>().GetMenuByType(fieldType).gameObject;
         SetMenu(false);
         ResetScaleSys();
+
+        Vector4 color = new Vector4();
+        color.w = 0.25f;
+        color.z = 0f;
+        float tmp = ((acceleration - minAcceleration) / (maxAcceleration - minAcceleration)) * (isPositive ? 1 : -1) / 2f + 0.5f;
+        color.x = 1f - tmp;
+        color.y = tmp;
+        material.SetColor("_Color", color);
     }
 
     void Update() {
@@ -129,6 +141,14 @@ public class Acceleration : Field {
         transform.localEulerAngles = new Vector3(0, rotationBar.value * 360, 0);
         rotationText.text = Mathf.Floor(transform.localEulerAngles.y).ToString();
 
+        Vector4 color = new Vector4();
+        color.w = 0.25f;
+        color.z = 0f;
+        float tmp = acceBar.value * (isPositive ? 1: -1) / 2f + 0.5f;
+        color.x = 1f - tmp;
+        color.y = tmp;
+        material.SetColor("_Color", color);
+
         SetScaleSys();
     }
 
@@ -187,8 +207,8 @@ public class Acceleration : Field {
         return fieldInfo;
     }
 
-    public override void Restore(FieldInfo info) {
-        base.Restore(info);
+    public override void Restore(FieldInfo info, bool edit) {
+        base.Restore(info, edit);
 
         acceleration = fieldInfo.acceAcce;
         isPositive = fieldInfo.acceIsAccePositive;

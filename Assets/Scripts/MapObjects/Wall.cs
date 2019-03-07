@@ -8,6 +8,8 @@ public class Wall : MonoBehaviour {
     GameObject scaleSys;
     GameObject rotationSys;
 
+    MyUI UIScript;
+
     protected bool editable = true;
     protected bool isEditing = false;
     protected float dragTimer = 0f;
@@ -20,7 +22,8 @@ public class Wall : MonoBehaviour {
     void Start () {
         scaleSys = GameObject.Find("ScaleSys");
         rotationSys = GameObject.Find("RotationSys");
-        print(rotationSys.name);
+        UIScript = GameObject.Find("Canvas").GetComponent<MyUI>();
+        //print(rotationSys.name);
         if (GameManager.editMode)
             editable = true;
         else
@@ -71,6 +74,7 @@ public class Wall : MonoBehaviour {
                         isEditing = true;
                         SetScaleSys();
                         SetRotationSys();
+                        UIScript.SetDeleteButton(true);
                     }
                 }
                 else
@@ -89,6 +93,13 @@ public class Wall : MonoBehaviour {
         dragTimeFlag = false;
         dragTimer = 0;
 
+    }
+
+    void OnDestroy() {
+        GameManager._instance.isEditing = false;
+        GameManager._instance.activeObject = null;
+        ResetScaleSys();
+        ResetRotationSys();
     }
 
 

@@ -29,7 +29,7 @@ public class ScaleSys : MonoBehaviour {
                 
                 Vector3 x = objTransform.right * Mathf.Clamp(Vector3.Dot(pos - centerPos, objTransform.right), 0.5f, maxSacle / 2);
                 Vector3 z = objTransform.forward * Mathf.Clamp(Vector3.Dot(pos - centerPos, objTransform.forward), 0.5f, maxSacle / 2);
-                print(pos);
+                //print(pos);
 
                 if (isCircle)
                 {

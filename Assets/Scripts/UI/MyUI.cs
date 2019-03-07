@@ -172,6 +172,10 @@ public class MyUI : MonoBehaviour {
         ok.onClick.AddListener(delegate () { infoWindow.SetActive(false); });
     }
 
+    public void BackToMenu() {
+        SceneManager.LoadScene("Home");
+    }
+
 
     /// <summary>
     ///              BUILD MENU
@@ -313,7 +317,7 @@ public class MyUI : MonoBehaviour {
                 FieldInfo info = (FieldInfo) bf.Deserialize(fs);
                 GameObject go = gameManager.CreateField(info.fieldType);
                 Field field = go.GetComponent<Field>();
-                field.Restore(info);
+                field.Restore(info, true);
             }
         }
     }
@@ -387,7 +391,7 @@ public class MyUI : MonoBehaviour {
             {
                 infoWindow.SetActive(true);
                 Text context = infoWindow.transform.Find("InfoWindowText").GetComponent<Text>();
-                context.text = "Name: " + levelName.text;
+                context.text = "Name: " + levelName.text + "already exists!";
                 Button ok = infoWindow.transform.Find("OKButton").GetComponent<Button>();
                 ok.onClick.RemoveAllListeners();
                 ok.onClick.AddListener(delegate () { infoWindow.SetActive(false); });

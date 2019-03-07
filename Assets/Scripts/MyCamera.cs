@@ -14,6 +14,8 @@ public class MyCamera : MonoBehaviour {
     Camera cam;
     float cameraSize;
     float cameraAspect;
+    float timer = 0f;
+
     public float distance = 8;
     public float cameraSmooth = 8;
     public float dragFactor = 0.1f;
@@ -58,8 +60,10 @@ public class MyCamera : MonoBehaviour {
 
         if (ballScript._isShot && !GameManager.gameOver)
         {
+            timer += Time.deltaTime;
             Vector3 pivot = ball.transform.position;
             Vector3 dir = ballRigid.velocity.normalized;
+            
             Move(pivot, distance, dir);
             Restrict();
         }
@@ -114,9 +118,14 @@ public class MyCamera : MonoBehaviour {
 	}
 
     void Move(Vector3 pivot, float dis, Vector3 dir) {
-        cam.transform.position = Vector3.Lerp(new Vector3(pivot.x + dir.x * dis, cam.transform.position.y, pivot.z + dir.z * dis),
-                                              new Vector3(pivot.x, cam.transform.position.y, pivot.z),
-                                              cameraSmooth * Time.deltaTime);
+        //Debug.Log(cam.transform.position);
+        //Debug.Log(cameraSmooth * Time.deltaTime);
+        Vector3 pos = Vector3.Lerp(new Vector3(cam.transform.position.x, cam.transform.position.y, cam.transform.position.z),
+                                   new Vector3(pivot.x + dir.x * dis, cam.transform.position.y, pivot.z + dir.z * dis),
+                                   cameraSmooth * timer);
+        cam.transform.position = pos;
+        //Debug.Log(pos);
+
     }
 
     void Restrict() {

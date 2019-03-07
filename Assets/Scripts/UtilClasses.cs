@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using System.IO;
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -126,6 +128,26 @@ public class MyUtils
         File.WriteAllText(Application.persistentDataPath + "/General/MapsInfo.json", json);
         return mapInfoJson;
     }
+
+    public static void DeleteLevelFiles(bool isOfficial, string name, string author) {
+        string dir;
+        if (isOfficial)
+        {
+            dir = Application.streamingAssetsPath + "/Levels/";
+        }
+        else
+        {
+            dir = Application.persistentDataPath + "/Levels/";
+        }
+
+        dir += name + "_" + author;
+        if (!Directory.Exists(dir))
+            return;
+        Directory.Delete(dir, true);
+    }
+
+    
+
 }
 
 [Serializable]

@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager _instance;
     public static bool gameOver = false;
     public static bool editMode = false;
-    public static bool gmMode = false;
+    public static bool isOfficial = false;
 
     public MyUI myUI;
     public GameObject builtField;
@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
     public string activeFieldType = null;
 
     public PlayerInfo player = new PlayerInfo();
+    public MapInfo currentMapInfo = new MapInfo();
 
     Dictionary<string, int> _fieldMaxDic;
     public Dictionary<string, int> fieldMaxDic {
@@ -42,13 +43,13 @@ public class GameManager : MonoBehaviour {
 
     MapInfoJson mapInfoJson = new MapInfoJson();
 
-    //static int num = 0;
 
     void Awake() {
         _instance = this;
-        editMode = _editMode;
-        gmMode = _gmMode;
-        print("gameManager Awake");
+        //editMode = _editMode;
+        if(editMode)
+            isOfficial = _gmMode;
+        
     }
 
 	void Start () {
@@ -75,15 +76,20 @@ public class GameManager : MonoBehaviour {
         if(!File.Exists(Application.persistentDataPath + "/General/MapsInfo.json"))
         {
             File.Create(Application.persistentDataPath + "/General/MapsInfo.json").Close();
-            //string json = JsonUtility.ToJson(mapInfoJson, true);
-            //print(json);
-            //File.WriteAllText(Application.persistentDataPath + "/General/MapsInfo.json", json);
             mapInfoJson = MyUtils.SyncMapInfo();
         }
         else
         {
             string json = File.ReadAllText(Application.persistentDataPath + "/General/MapsInfo.json");
             mapInfoJson = JsonUtility.FromJson<MapInfoJson>(json);
+        }
+
+        if (!editMode)
+        {
+            currentMapInfo.author = PlayerPrefs.GetString("currentLevelAuthor");
+            currentMapInfo.name = PlayerPrefs.GetString("currentLevelName");
+            isOfficial = PlayerPrefs.GetInt("isOfficial") == 1 ? true : false;
+            RestoreMapObjects(currentMapInfo.name, currentMapInfo.author);
         }
     }
 
@@ -272,7 +278,7 @@ public class GameManager : MonoBehaviour {
 
 
     public bool DeleteMap(int index) {
-        if (gmMode)
+        if (isOfficial)
         {
             return DeleteMapFromOfficial(index);
         }
@@ -283,7 +289,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public int FindMap(string name, string author) {
-        if (gmMode)
+        if (isOfficial)
         {
             return FindMapFromOfficial(name, author);
         }
@@ -294,7 +300,7 @@ public class GameManager : MonoBehaviour {
     }
 
     string GetMapDir() {
-        return gmMode ? Application.streamingAssetsPath : Application.persistentDataPath;
+        return isOfficial ? Application.streamingAssetsPath : Application.persistentDataPath;
     }
 
     int FindMapFromCustom(string name, string author) {
@@ -362,7 +368,15 @@ public class GameManager : MonoBehaviour {
         mapInfo.name = name;
         mapInfo.author = player.name;
         mapInfo.dateTime = DateTime.Now.ToString();
-        mapInfoJson.officialMaps.Add(mapInfo);
+        if (isOfficial)
+        {
+            mapInfoJson.officialMaps.Add(mapInfo);
+        }
+        else
+        {
+            mapInfoJson.customMaps.Add(mapInfo);
+        }
+        
         string json = JsonUtility.ToJson(mapInfoJson, true);
         File.WriteAllText(Application.persistentDataPath + "/General/MapsInfo.json", json);
 
@@ -396,7 +410,7 @@ public class GameManager : MonoBehaviour {
         bf.Serialize(file, mapObjInfo);
         file.Close();
 
-        Transform[] fieldsTrans = mapFields.transform.GetComponentsInChildren<Transform>();
+        //Transform[] fieldsTrans = mapFields.transform.GetComponentsInChildren<Transform>();
         dir = dir + "/fields";
         MyUtils.EmptyOrCreateDir(dir);
         foreach(var kv in mapFieldDic)
@@ -413,11 +427,12 @@ public class GameManager : MonoBehaviour {
         return -1;
     }
 
-    public void RestoreMapObjects(string name) {
+    public void RestoreMapObjects(string Name, string Author) {
         print("restore map objects");
 
-        string dir = GetMapDir() + "/Levels/" + name + "_" + player.name;
+        string dir = GetMapDir() + "/Levels/" + Name + "_" + Author;
         //FileSystemInfo fileInfo = MyUtils.GetFile(dir);
+        print("Load from: " + dir);
         BinaryFormatter bf = new BinaryFormatter();
         MapObjInfo mapObjInfo = new MapObjInfo();
         FileStream fs = File.Open(dir + "/general", FileMode.Open);
@@ -454,7 +469,7 @@ public class GameManager : MonoBehaviour {
                 fs = File.Open(file.FullName, FileMode.Open);
                 FieldInfo info = (FieldInfo)bf.Deserialize(fs);
                 GameObject go = CreateField(info.fieldType, true);
-                go.GetComponent<Field>().Restore(info);
+                go.GetComponent<Field>().Restore(info, false);
             }
                 
         }
