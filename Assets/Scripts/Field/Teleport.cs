@@ -77,7 +77,10 @@ public class Teleport : Field {
                 tmpVelocity = rigid.velocity;
                 //ballTrans.position += -dotX * transform.right * transform.localScale.x;
                 Ball script = ballTrans.GetComponent<Ball>();
-                script.HideWithPartical(-dotX * transform.right * tmpVelocity.magnitude * transform.localScale.x);              
+                //script.HideWithPartical(-dotX * transform.right * tmpVelocity.magnitude * transform.localScale.x);  
+                Vector3 newPos = rigid.position + transform.right * transform.localScale.x * Mathf.Sign(-dotX);
+
+                script.HideWithPartical(newPos, 0.5f);
             }
             else
             {
@@ -86,7 +89,10 @@ public class Teleport : Field {
                 //ballTrans.position += -dotZ * transform.forward * transform.localScale.z;
 
                 Ball script = ballTrans.GetComponent<Ball>();
-                script.HideWithPartical(-dotZ * transform.forward * tmpVelocity.magnitude * transform.localScale.z);
+                //script.HideWithPartical(-dotZ * transform.forward * tmpVelocity.magnitude * transform.localScale.z);
+                Vector3 newPos = rigid.position + transform.forward * transform.localScale.z * Mathf.Sign(-dotZ);
+
+                script.HideWithPartical(newPos, 0.5f);
             }
         }
         
@@ -97,11 +103,11 @@ public class Teleport : Field {
         {
             if (!collider.transform.parent.GetComponent<Ball>()._isShot)
                 return;
-            rigid = collider.gameObject.transform.parent.GetComponent<Rigidbody>();
-            ballTrans = rigid.transform;
+            //rigid = collider.gameObject.transform.parent.GetComponent<Rigidbody>();
+            //ballTrans = rigid.transform;
 
-            rigid.velocity = tmpVelocity;
-            ballTrans.GetComponent<Ball>().ShowWithPartical(tmpVelocity);
+            //rigid.velocity = tmpVelocity;
+            //ballTrans.GetComponent<Ball>().ShowWithPartical(tmpVelocity);
         }
     }
 

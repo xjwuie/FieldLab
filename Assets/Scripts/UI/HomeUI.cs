@@ -14,8 +14,12 @@ public class HomeUI : MonoBehaviour {
     string author;
     bool isOfficial;
 
+    DontDestroy dontDestroy;
+    PlayerInfo player;
+
     GameObject showLevelsButton;
     GameObject editModeButton;
+    GameObject playerNameText;
 
     Transform levelContent;
     GameObject confirmWindow;
@@ -29,6 +33,7 @@ public class HomeUI : MonoBehaviour {
 
 
     void Awake() {
+        MyUtils.InitFileSystem();
         MyUtils.SyncMapInfo();
         graphicRayCaster = GetComponent<GraphicRaycaster>();
     }
@@ -36,6 +41,7 @@ public class HomeUI : MonoBehaviour {
 	void Start () {
         showLevelsButton = transform.Find("Home/ButtonGame").gameObject;
         editModeButton = transform.Find("Home/ButtonEditor").gameObject;
+        playerNameText = transform.Find("Home/PlayerNameText").gameObject;
         levelContent = transform.Find("Levels/Scroll View/Viewport/LevelContent");
         levelInfoPanel = transform.Find("LevelInfoPanel").gameObject;
         confirmWindow = transform.Find("ConfirmWindow").gameObject;
@@ -51,6 +57,10 @@ public class HomeUI : MonoBehaviour {
             GameManager.editMode = true;
             SceneManager.LoadScene("Game");
         });
+
+        dontDestroy = GameObject.Find("DontDestroy").GetComponent<DontDestroy>();
+        player = dontDestroy.player;
+        playerNameText.GetComponent<Text>().text = player.name;
         
         LoadMapInfo();	
 	}

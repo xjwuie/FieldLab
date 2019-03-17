@@ -137,4 +137,6 @@ public class MyCamera : MonoBehaviour {
                                                        Mathf.Clamp(cam.transform.position.z, -zMax, zMax)
                                                 );
     }
+
+    
 }

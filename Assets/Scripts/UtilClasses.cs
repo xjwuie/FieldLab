@@ -13,11 +13,15 @@ public class MyUtils
         if (!Directory.Exists(Application.persistentDataPath + "/General"))
             Directory.CreateDirectory(Application.persistentDataPath + "/General");
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
+        {
             Directory.CreateDirectory(Application.persistentDataPath + "/Save");
+            Directory.CreateDirectory(Application.persistentDataPath + "/Save/runtime save");
+        }
+            
         if (!Directory.Exists(Application.persistentDataPath + "/Levels"))
             Directory.CreateDirectory(Application.persistentDataPath + "/Levels");
-        if (!Directory.Exists(Application.streamingAssetsPath + "/Levels"))
-            Directory.CreateDirectory(Application.streamingAssetsPath + "/Levels");
+        //if (!Directory.Exists(Application.streamingAssetsPath + "/Levels"))
+        //    Directory.CreateDirectory(Application.streamingAssetsPath + "/Levels");
         
     }
 
@@ -200,7 +204,9 @@ public class MapObjInfo
 [Serializable]
 public class PlayerInfo
 {
-    public string name;
+    public string name {
+        get; private set;
+    }
     public PlayerInfo(string str = "xjwuie") {
         name = str;
     }

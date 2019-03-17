@@ -149,6 +149,11 @@ public class MyUI : MonoBehaviour {
         Time.timeScale = 1;
     }
 
+    public void Next() {
+        gameManager.LoadNextMap();
+        WinUI.SetActive(false);
+    }
+
     public void ChangeSpeed() {
         speedIndex = (speedIndex + 1) % 3;
         Time.timeScale = speedList[speedIndex];

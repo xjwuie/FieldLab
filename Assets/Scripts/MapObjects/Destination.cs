@@ -51,10 +51,11 @@ public class Destination : MonoBehaviour {
             rigid = collider.gameObject.transform.parent.GetComponent<Rigidbody>();
             GameManager._instance.Win();
             Invoke("TimeStop", 2);
+            Debug.Log("win"); 
             //rigid.velocity = Vector3.zero;
         }
         
-        //Debug.Log("win");
+        
         //Debug.Log(Time.time);
     }
 
@@ -73,5 +74,9 @@ public class Destination : MonoBehaviour {
         dragFlag = false;
         dragTimer = 0;
         dragTimeFlag = false;
+    }
+
+    public void ResetSelf() {
+        ifWin = false;
     }
 }

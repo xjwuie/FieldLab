@@ -15,6 +15,7 @@ public class Ball : MonoBehaviour {
     
     Vector3 shootDir;
     Vector3 velocityDir = Vector3.zero;
+    bool inTeleport = false;
 
     public float velocity = 5;
 
@@ -108,28 +109,54 @@ public class Ball : MonoBehaviour {
             mousePos.y = transform.position.y;
             transform.position = mousePos;
         }
-	}
+        
+    }
 
     public void Shoot() {
+        print("shoot");
+        
         if (readyToShoot && !isShot)
         {
             rigid.constraints = RigidbodyConstraints.None;
             rigid.velocity = shootDir * velocity;
+            
             isShot = true;
         }  
     }
 
     public void HideWithPartical(Vector3 v) {
         particalSys.transform.position = transform.position;
-        //transform.position = transform.position + Vector3.down * 5;
+        inTeleport = true;
         GetComponent<MeshRenderer>().enabled = false;
         rigid.velocity = v;
         
         particalSys.GetComponent<ParticleSystem>().Play();
     }
 
+    public void HideWithPartical(Vector3 newPos, float time) {
+        Vector3 tmpV = rigid.velocity;
+        rigid.velocity = Vector3.zero;
+        particalSys.transform.position = transform.position;
+        inTeleport = true;
+        GetComponent<MeshRenderer>().enabled = false;
+
+        particalSys.GetComponent<ParticleSystem>().Play();
+        StartCoroutine(ShowWithPartical(time, newPos, tmpV));
+    }
+
+    IEnumerator ShowWithPartical(float time, Vector3 newPos, Vector3 v) {
+        yield return new WaitForSeconds(time);
+        transform.position = newPos;
+        rigid.velocity = v;
+        particalSys.transform.position = transform.position;
+        inTeleport = false;
+        GetComponent<MeshRenderer>().enabled = true;
+        particalSys.GetComponent<ParticleSystem>().Play();
+    }
+
     public void ShowWithPartical(Vector3 v) {
         particalSys.transform.position = transform.position;
+        inTeleport = false;
         GetComponent<MeshRenderer>().enabled = true;
         rigid.velocity = v;
         particalSys.GetComponent<ParticleSystem>().Play();
@@ -176,6 +203,8 @@ public class Ball : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
+        if (inTeleport)
+            return;
         if(collision.gameObject.tag == "Wall")
         {
             ContactPoint contactPoint = collision.contacts[0];
@@ -225,4 +254,10 @@ public class Ball : MonoBehaviour {
         editMenu.GetComponent<Animator>().SetBool("menuOn", isOn);
     }
 
+
+    public void ResetSelf() {
+        isShot = false;
+        shootDir = transform.forward;
+        
+    }
 }

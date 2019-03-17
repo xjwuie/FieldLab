@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour {
 
 	void Start () {
         print("gamemanager start");
-        MyUtils.InitFileSystem();
+        //MyUtils.InitFileSystem();
         
         eventSystem = GameObject.Find("EventSystem").GetComponent<EventSystem>();
         graphicRayCaster = GameObject.Find("Canvas").GetComponent<GraphicRaycaster>();
@@ -361,6 +361,8 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+
+
     public int SaveMapObjects(string name) {
         print("save map objects");
 
@@ -481,7 +483,40 @@ public class GameManager : MonoBehaviour {
 
     }
 
-
+    public void LoadNextMap() {
+        int currentMapIndex = FindMap(currentMapInfo.name, currentMapInfo.author);
+        if (currentMapIndex == -1)
+        {
+            return;
+        }
+        ++currentMapIndex;
+        if (isOfficial)
+        {
+            if(currentMapIndex == mapInfoJson.officialMaps.Count)
+            {
+                return;
+            }
+            currentMapInfo.author = mapInfoJson.officialMaps[currentMapIndex].author;
+            currentMapInfo.name = mapInfoJson.officialMaps[currentMapIndex].name;
+        }
+        else
+        {
+            if (currentMapIndex == mapInfoJson.officialMaps.Count)
+            {
+                return;
+            }
+            currentMapInfo.author = mapInfoJson.customMaps[currentMapIndex].author;
+            currentMapInfo.name = mapInfoJson.customMaps[currentMapIndex].name;
+            
+        }
+        PlayerPrefs.SetString("currentLevelName", currentMapInfo.name);
+        PlayerPrefs.SetString("currentLevelAuthor", currentMapInfo.author);
+        RestoreMapObjects(currentMapInfo.name, currentMapInfo.author);
+        Reset();
+        //mapObjects.GetComponent<MapObjects>().ResetMapObjects();
+        ball.GetComponent<Ball>().ResetSelf();
+        destination.GetComponent<Destination>().ResetSelf();
+    }
 
     
 }
